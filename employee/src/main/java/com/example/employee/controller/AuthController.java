@@ -1,10 +1,9 @@
 package com.example.employee.controller;
 
-import com.example.employee.dto.AuthRequest;
-import com.example.employee.dto.AuthResponse;
-import com.example.employee.entity.User;
+import com.example.employee.model.User;
 import com.example.employee.repository.UserRepository;
 import com.example.employee.security.JwtUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,37 +13,42 @@ import java.util.Optional;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final UserRepository repo;
-    private final PasswordEncoder encoder;
-    private final JwtUtil jwtUtil;
+    @Autowired
+    private UserRepository repo;
 
-    public AuthController(UserRepository repo,
-                          PasswordEncoder encoder,
-                          JwtUtil jwtUtil) {
-        this.repo = repo;
-        this.encoder = encoder;
-        this.jwtUtil = jwtUtil;
-    }
+    @Autowired
+    private PasswordEncoder encoder;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @PostMapping("/register")
     public String register(@RequestBody User user) {
+
         user.setPassword(encoder.encode(user.getPassword()));
+
+        if (user.getRole() == null || user.getRole().isEmpty()) {
+            user.setRole("USER");
+        }
+
         repo.save(user);
-        return "User registered";
+
+        return "User registered successfully";
     }
 
     @PostMapping("/login")
-    public AuthResponse login(@RequestBody AuthRequest req) {
+    public String login(@RequestBody User user) {
 
-        User user = repo.findByUsername(req.getUsername())
-                .orElseThrow(() -> new RuntimeException("Invalid user"));
+        Optional<User> existing = repo.findByUsername(user.getUsername());
 
-        if (encoder.matches(req.getPassword(), user.getPassword())) {
+        if (existing.isPresent() &&
+                encoder.matches(user.getPassword(), existing.get().getPassword())) {
 
-            String token = jwtUtil.generateToken(user.getUsername(), user.getRole());
-            return new AuthResponse(token);
+            User u = existing.get();
+
+            return jwtUtil.generateToken(u.getUsername(), u.getRole());
         }
 
-        throw new RuntimeException("Invalid credentials");
+        return "Invalid credentials";
     }
 }
