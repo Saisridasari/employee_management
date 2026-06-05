@@ -85,4 +85,19 @@ public class EmployeeService {
     public void deleteEmployee(Long id) {
         repo.deleteById(id);
     }
+         // ------------------ SEARCH BY NAME ------------------
+public List<EmployeeResponseDTO> searchByName(String name) {
+    return repo.findByNameContainingIgnoreCase(name)
+            .stream()
+            .map(this::mapToDTO)
+            .toList();
+}
+
+// ------------------ SEARCH BY EMAIL ------------------
+public List<EmployeeResponseDTO> searchByEmail(String email) {
+    return repo.findByEmailContainingIgnoreCase(email)
+            .stream()
+            .map(this::mapToDTO)
+            .toList();
+}
 }

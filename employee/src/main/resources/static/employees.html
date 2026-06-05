@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Employee Management</h1>
+
+    <!-- Add Employee Section -->
+    <div class="card">
+
+        <h2>Add Employee</h2>
+
+        <input id="name" placeholder="Name">
+
+        <input id="email" placeholder="Email">
+
+        <input id="department" placeholder="Department">
+
+        <input id="salary" type="number" placeholder="Salary">
+
+        <input id="experience" type="number" placeholder="Experience">
+
+        <input id="joiningDate" type="date">
+
+        <button onclick="addEmployee()">
+            Add Employee
+        </button>
+
+    </div>
+
+    <!-- Search Section -->
+    <div class="card">
+
+        <h2>Search Employee</h2>
+
+        <input
+            id="searchName"
+            placeholder="Search By Name">
+
+        <button onclick="searchEmployee()">
+            Search By Name
+        </button>
+
+        <br><br>
+
+        <input
+            id="searchEmail"
+            placeholder="Search By Email">
+
+        <button onclick="searchByEmail()">
+            Search By Email
+        </button>
+
+    </div>
+
+    <!-- Employee List -->
+    <div class="card">
+
+        <h2>Employees</h2>
+
+        <button onclick="loadEmployees()">
+            Load Employees
+        </button>
+
+        <div id="employeeList"></div>
+
+    </div>
+
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/employees.js"></script>
+
+</body>
+</html>

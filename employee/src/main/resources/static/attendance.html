@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Attendance</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>Attendance Management</h1>
+
+<input id="employeeId"
+       placeholder="Employee ID">
+
+<button onclick="checkIn()">
+Check In
+</button>
+
+<button onclick="checkOut()">
+Check Out
+</button>
+
+<hr>
+
+<button onclick="loadAttendance()">
+Attendance History
+</button>
+
+<div id="attendanceList"></div>
+
+<script src="js/config.js"></script>
+<script src="js/attendance.js"></script>
+
+</body>
+</html>

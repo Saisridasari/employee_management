@@ -44,4 +44,19 @@ public class EmployeeController {
         service.deleteEmployee(id);
         return "Deleted successfully";
     }
+          // ------------------ SEARCH BY NAME ------------------
+@GetMapping("/search/name")
+public List<EmployeeResponseDTO> searchByName(
+        @RequestParam String name) {
+
+    return service.searchByName(name);
+}
+
+// ------------------ SEARCH BY EMAIL ------------------
+@GetMapping("/search/email")
+public List<EmployeeResponseDTO> searchByEmail(
+        @RequestParam String email) {
+
+    return service.searchByEmail(email);
+}   
 }
