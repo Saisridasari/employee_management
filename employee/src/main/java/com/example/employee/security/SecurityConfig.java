@@ -10,9 +10,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.*;
 
 import java.util.List;
 
@@ -26,23 +24,15 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-            // ✅ CORS ENABLED (IMPORTANT)
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-
-            // ❌ disable CSRF for REST API
             .csrf(csrf -> csrf.disable())
 
             .authorizeHttpRequests(auth -> auth
 
-                // ✅ PUBLIC APIs
-                .requestMatchers(
-                        "/auth/**",
-                        "/v3/api-docs/**",
-                        "/swagger-ui/**",
-                        "/swagger-ui.html"
-                ).permitAll()
+                // PUBLIC APIs
+                .requestMatchers("/auth/**").permitAll()
 
-                // 🔐 SECURED APIs
+                // SECURED APIs (YOUR ORIGINAL REQUIREMENT)
                 .requestMatchers("/employees/**").hasRole("ADMIN")
                 .requestMatchers("/departments/**").hasRole("ADMIN")
                 .requestMatchers("/attendance/**").hasAnyRole("ADMIN", "USER")
@@ -50,9 +40,8 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             )
 
-            // 🚨 IMPORTANT FOR JWT
             .sessionManagement(session ->
-                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             );
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
@@ -60,7 +49,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // ✅ CORS CONFIG (FIXED)
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
 
@@ -69,11 +57,11 @@ public class SecurityConfig {
         config.setAllowedOrigins(List.of("http://127.0.0.1:5500"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
-
-        // IMPORTANT (JWT projects need this sometimes)
         config.setAllowCredentials(true);
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
+
         source.registerCorsConfiguration("/**", config);
 
         return source;

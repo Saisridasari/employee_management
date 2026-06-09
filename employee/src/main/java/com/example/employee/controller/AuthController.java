@@ -8,10 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin
 public class AuthController {
 
     @Autowired
@@ -23,8 +25,9 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    // ✅ REGISTER
     @PostMapping("/register")
-    public String register(@RequestBody User user) {
+    public Map<String, String> register(@RequestBody User user) {
 
         user.setPassword(encoder.encode(user.getPassword()));
 
@@ -34,11 +37,12 @@ public class AuthController {
 
         repo.save(user);
 
-        return "User registered successfully";
+        return Map.of("message", "User registered successfully");
     }
 
+    // ✅ LOGIN (FIXED - RETURNS JSON)
     @PostMapping("/login")
-    public String login(@RequestBody User user) {
+    public Map<String, String> login(@RequestBody User user) {
 
         Optional<User> existing = repo.findByUsername(user.getUsername());
 
@@ -47,9 +51,11 @@ public class AuthController {
 
             User u = existing.get();
 
-            return jwtUtil.generateToken(u.getUsername(), u.getRole());
+            String token = jwtUtil.generateToken(u.getUsername(), u.getRole());
+
+            return Map.of("token", token);
         }
 
-        return "Invalid credentials";
+        return Map.of("error", "Invalid credentials");
     }
 }

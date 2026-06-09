@@ -1,0 +1,206 @@
+{
+  "info": {
+    "_postman_id": "employee-system-collection",
+    "name": "Employee Management System API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth - Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8081/auth/login",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8081",
+          "path": ["auth", "login"]
+        }
+      }
+    },
+    {
+      "name": "Get All Employees",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8081/employees",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8081",
+          "path": ["employees"]
+        }
+      }
+    },
+    {
+      "name": "Add Employee",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"John\",\n  \"email\": \"john@gmail.com\",\n  \"department\": \"IT\",\n  \"salary\": 50000,\n  \"experience\": 2,\n  \"joiningDate\": \"2026-01-01\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8081/employees",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8081",
+          "path": ["employees"]
+        }
+      }
+    },
+    {
+      "name": "Delete Employee",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8081/employees/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8081",
+          "path": ["employees", "1"]
+        }
+      }
+    },
+    {
+      "name": "Search Employee",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8081/employees/search?key=john",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8081",
+          "path": ["employees", "search"],
+          "query": [
+            {
+              "key": "key",
+              "value": "john"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Departments",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8081/departments",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8081",
+          "path": ["departments"]
+        }
+      }
+    },
+    {
+      "name": "Add Department",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"IT Department\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8081/departments",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8081",
+          "path": ["departments"]
+        }
+      }
+    },
+    {
+      "name": "Attendance Check-In",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8081/attendance/checkin/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8081",
+          "path": ["attendance", "checkin", "1"]
+        }
+      }
+    },
+    {
+      "name": "Attendance Check-Out",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8081/attendance/checkout/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8081",
+          "path": ["attendance", "checkout", "1"]
+        }
+      }
+    }
+  ]
+}

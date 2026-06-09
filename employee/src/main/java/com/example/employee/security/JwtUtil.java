@@ -18,7 +18,6 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(SECRET.getBytes());
     }
 
-    // GENERATE TOKEN WITH ROLE
     public String generateToken(String username, String role) {
 
         Map<String, Object> claims = new HashMap<>();

@@ -1,76 +1,83 @@
-async function checkIn() {
+window.checkIn = async function () {
 
-    const employeeId =
-        document.getElementById("employeeId").value;
+    const employeeId = document.getElementById("employeeId").value;
 
-    const response = await fetch(
-        `${API_URL}/attendance/checkin/${employeeId}`,
-        {
+    if (!employeeId) {
+        alert("Enter Employee ID");
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API_URL}/attendance/checkin/${employeeId}`, {
             method: "POST",
-            headers: {
-                "Authorization":
-                    "Bearer " + getToken()
-            }
+            headers: authHeader()
+        });
+
+        if (res.ok) {
+            alert("Checked In Successfully");
+        } else {
+            alert("Check-in failed");
         }
-    );
 
-    if (response.ok) {
-
-        alert("Checked In");
+    } catch (error) {
+        console.error(error);
+        alert("Error during check-in");
     }
-}
+};
+window.checkOut = async function () {
 
-async function checkOut() {
+    const attendanceId = prompt("Enter Attendance ID");
 
-    const attendanceId =
-        prompt("Enter Attendance ID");
+    if (!attendanceId) return;
 
-    const response = await fetch(
-        `${API_URL}/attendance/checkout/${attendanceId}`,
-        {
+    try {
+        const res = await fetch(`${API_URL}/attendance/checkout/${attendanceId}`, {
             method: "PUT",
-            headers: {
-                "Authorization":
-                    "Bearer " + getToken()
-            }
+            headers: authHeader()
+        });
+
+        if (res.ok) {
+            alert("Checked Out Successfully");
+        } else {
+            alert("Check-out failed");
         }
-    );
 
-    if (response.ok) {
-
-        alert("Checked Out");
+    } catch (error) {
+        console.error(error);
+        alert("Error during check-out");
     }
-}
+};
+window.loadAttendance = async function () {
 
-async function loadAttendance() {
+    try {
+        const res = await fetch(`${API_URL}/attendance`, {
+            method: "GET",
+            headers: authHeader()
+        });
 
-    const response = await fetch(
-        `${API_URL}/attendance`,
-        {
-            headers: {
-                "Authorization":
-                    "Bearer " + getToken()
-            }
+        if (res.status === 403) {
+            alert("Unauthorized");
+            return;
         }
-    );
 
-    const data = await response.json();
+        const data = await res.json();
 
-    let html = "";
+        let html = "";
 
-    data.forEach(a => {
+        data.forEach(a => {
+            html += `
+                <div class="card">
+                    <p>Employee ID: ${a.employeeId}</p>
+                    <p>Check In: ${a.checkIn}</p>
+                    <p>Check Out: ${a.checkOut}</p>
+                </div>
+            `;
+        });
 
-        html += `
-        <div class="card">
-            Employee: ${a.employeeId}
-            <br>
-            In: ${a.checkIn}
-            <br>
-            Out: ${a.checkOut}
-        </div>
-        `;
-    });
+        document.getElementById("attendanceList").innerHTML = html;
 
-    document.getElementById("attendanceList")
-        .innerHTML = html;
-}
+    } catch (error) {
+        console.error(error);
+        alert("Failed to load attendance");
+    }
+};
